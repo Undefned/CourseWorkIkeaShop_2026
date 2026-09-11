@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Заявка на замер — TSOGZ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@500&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-meta">
+      <span>Санкт-Петербург</span>
+      <span>+7 (495) 000–00–00</span>
+    </div>
+    <a href="index.html" class="logo">TSOGZ</a>
+    <nav class="main-nav" aria-label="Основная навигация">
+      <a href="portfolio.html">Портфолио</a>
+      <a href="services.html">Услуги</a>
+      <a href="showroom.html">Шоурум</a>
+      <a href="contacts.html">Контакты</a>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero page-hero--image" style="background-image: url('https://placehold.co/1440x257');">
+  <nav class="breadcrumbs" aria-label="Хлебные крошки">
+    <a href="index.html">Главная</a>
+    <span aria-hidden="true">/</span>
+    <span class="current" aria-current="page">Заявка на замер</span>
+  </nav>
+  <h1>Заявка на замер</h1>
+  <p class="lede">Оставьте контакты и мы перезвоним, уточним задачу и предложим удобное время</p>
+</section>
+
+<main>
+  <section class="request-layout">
+    <div class="process">
+      <h2>Как это работает</h2>
+
+      <div class="process-step">
+        <span class="step-number">01</span>
+        <h3>Заявка</h3>
+        <p>Заполните форму — это займёт пару минут.</p>
+      </div>
+
+      <div class="process-step">
+        <span class="step-number">02</span>
+        <h3>Звонок</h3>
+        <p>Менеджер уточнит площадь, сроки и формат работы.</p>
+      </div>
+
+      <div class="process-step">
+        <span class="step-number">03</span>
+        <h3>Замер</h3>
+        <p>Согласуем визит или онлайн-консультацию.</p>
+      </div>
+    </div>
+
+    <div class="request-form-card">
+      <h2>Оставить заявку</h2>
+
+      <form>
+        <div class="form-grid">
+          <div class="field">
+            <label for="name">Имя</label>
+            <input type="text" id="name" name="name" placeholder="Как к вам обращаться?" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="phone">Телефон</label>
+            <input type="tel" id="phone" name="phone" placeholder="+7" autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="hello@email.ru" autocomplete="email">
+        </div>
+
+        <fieldset class="chip-group" style="border: none; padding: 0; margin: 0;">
+          <legend class="field-label">Тип объекта</legend>
+          <div class="chip-row" role="radiogroup" aria-label="Тип объекта">
+            <button type="button" class="chip" role="radio" aria-pressed="true" aria-checked="true">Квартира</button>
+            <button type="button" class="chip" role="radio" aria-pressed="false" aria-checked="false">Дом</button>
+            <button type="button" class="chip" role="radio" aria-pressed="false" aria-checked="false">Коммерция</button>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="area">Площадь, м²</label>
+          <input type="number" id="area" name="area" placeholder="86" min="0" inputmode="numeric">
+        </div>
+
+        <div class="field">
+          <label for="message">Сообщение</label>
+          <textarea id="message" name="message" placeholder="Расскажите о задаче, сроках или пожеланиях"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-fill">Отправить заявку</button>
+        <p class="consent">Нажимая кнопку, вы соглашаетесь на обработку персональных данных</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="logo">TSOGZ</span>
+        <p>Студия интерьера и шоурум</p>
+      </div>
+
+      <div class="footer-columns">
+        <div class="footer-col">
+          <span class="col-title">Проекты</span>
+          <a href="portfolio.html">Портфолио</a>
+          <a href="services.html">Услуги</a>
+          <a href="showroom.html">Шоурум</a>
+          <a href="about.html">О студии</a>
+        </div>
+        <div class="footer-col">
+          <span class="col-title">Клиентам</span>
+          <a href="request.html">Замер</a>
+          <a href="delivery.html">Доставка и самовывоз</a>
+          <a href="privacy.html">Политика конфиденциальности</a>
+        </div>
+        <div class="footer-col">
+          <span class="col-title">Контакты</span>
+          <span>Москва</span>
+          <a href="tel:+74950000000">+7 495 000–00–00</a>
+          <a href="mailto:hello@tsogz.ru">hello@tsogz.ru</a>
+        </div>
+      </div>
+    </div>
+
+    <p class="copyright">© 2026 TSOGZ</p>
+    <p class="footer-privacy"><a href="privacy.html">Политика конфиденциальности</a></p>
+  </div>
+</footer>
+
+<script>
+  // Simple single-select behaviour for the "Тип объекта" chip group
+  document.querySelectorAll('.chip-row').forEach(function (group) {
+    group.addEventListener('click', function (e) {
+      var chip = e.target.closest('.chip');
+      if (!chip) return;
+      group.querySelectorAll('.chip').forEach(function (c) {
+        c.setAttribute('aria-pressed', 'false');
+        c.setAttribute('aria-checked', 'false');
+      });
+      chip.setAttribute('aria-pressed', 'true');
+      chip.setAttribute('aria-checked', 'true');
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Шоурум — TSOGZ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@500&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-meta">
+      <span>Санкт-Петербург</span>
+      <span>+7 (495) 000–00–00</span>
+    </div>
+    <a href="index.html" class="logo">TSOGZ</a>
+    <nav class="main-nav" aria-label="Основная навигация">
+      <a href="portfolio.html">Портфолио</a>
+      <a href="services.html">Услуги</a>
+      <a href="showroom.html">Шоурум</a>
+      <a href="contacts.html">Контакты</a>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero page-hero--soft">
+  <nav class="breadcrumbs" aria-label="Хлебные крошки">
+    <a href="index.html">Главная</a>
+    <span aria-hidden="true">/</span>
+    <span class="current" aria-current="page">Шоурум</span>
+  </nav>
+  <h1>Шоурум</h1>
+  <p class="lede">Мебель, свет и декор с наличием для клиентов студии и дизайнеров-партнеров</p>
+</section>
+
+<main>
+  <nav class="filter-bar" aria-label="Фильтр по категориям">
+    <div class="filter-row" role="radiogroup" aria-label="Категория товаров">
+      <button type="button" class="filter-chip" role="radio" aria-pressed="true" aria-checked="true">Все</button>
+      <button type="button" class="filter-chip" role="radio" aria-pressed="false" aria-checked="false">Мебель</button>
+      <button type="button" class="filter-chip" role="radio" aria-pressed="false" aria-checked="false">Свет</button>
+      <button type="button" class="filter-chip" role="radio" aria-pressed="false" aria-checked="false">Декор</button>
+      <button type="button" class="filter-chip" role="radio" aria-pressed="false" aria-checked="false">Для партнеров</button>
+    </div>
+  </nav>
+
+  <section class="featured-collection">
+    <div class="featured-collection-inner">
+      <img src="https://placehold.co/980x520" alt="Коллекция Alva в шоуруме TSOGZ">
+      <div class="featured-card">
+        <span class="eyebrow">Избранная коллекция</span>
+        <h2>Коллекция Alva</h2>
+        <p class="meta">Мебель · в наличии</p>
+        <p class="desc">Мягкие формы, натуральные материалы и спокойная палитра — для жилых пространств.</p>
+        <a href="#" class="btn btn-outline">Смотреть коллекцию</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="product-section" aria-label="Каталог шоурума">
+    <div class="product-grid">
+      <a class="product-card" href="product-yoga.html">
+        <img src="https://placehold.co/432x360" alt="Кресло Yoga">
+        <div>
+          <h3>Кресло Yoga</h3>
+          <p class="meta">Мебель · 89 000 ₽</p>
+        </div>
+      </a>
+      <a class="product-card" href="#">
+        <img src="https://placehold.co/432x360" alt="Стол MATILDA">
+        <div>
+          <h3>Cтол MATILDA</h3>
+          <p class="meta">Мебель · 74 000 ₽</p>
+        </div>
+      </a>
+      <a class="product-card" href="#">
+        <img src="https://placehold.co/432x360" alt="Двуспальная кровать LAV BED">
+        <div>
+          <h3>Двуспальная кровать LAV BED</h3>
+          <p class="meta">Мебель · 56 000 ₽</p>
+        </div>
+      </a>
+      <a class="product-card" href="#">
+        <img src="https://placehold.co/432x360" alt="Диван Atelier">
+        <div>
+          <h3>Диван Atelier</h3>
+          <p class="meta">Мебель · 28 000 ₽</p>
+        </div>
+      </a>
+      <a class="product-card" href="#">
+        <img src="https://placehold.co/432x360" alt="Стеллаж Line">
+        <div>
+          <h3>Стеллаж Line</h3>
+          <p class="meta">Мебель · 210 000 ₽</p>
+        </div>
+      </a>
+      <a class="product-card" href="#">
+        <img src="https://placehold.co/432x360" alt="Пуф Arc">
+        <div>
+          <h3>Пуф Arc</h3>
+          <p class="meta">Мебель · 12 000 ₽</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="load-more">
+      <button type="button" class="btn btn-outline">Показать еще</button>
+    </div>
+  </section>
+
+  <section class="partner-band">
+    <div class="partner-band-text">
+      <h2>Для дизайнеров-партнеров</h2>
+      <p>Отдельные условия, приоритетный подбор и сопровождение комплектации из шоурума.</p>
+    </div>
+    <a href="#" class="btn btn-outline">Стать партнером</a>
+  </section>
+
+  <section class="cta-banner">
+    <h2>Начните с бесплатного замера</h2>
+    <p>Оставим заявку и подготовим ориентир по стоимости проекта</p>
+    <div class="btn-row">
+      <a href="request.html" class="btn btn-fill">Записаться на замер</a>
+      <a href="#" class="btn btn-outline-light">Консультация</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="logo">TSOGZ</span>
+        <p>Студия интерьера и шоурум</p>
+      </div>
+
+      <div class="footer-columns">
+        <div class="footer-col">
+          <span class="col-title">Проекты</span>
+          <a href="portfolio.html">Портфолио</a>
+          <a href="services.html">Услуги</a>
+          <a href="showroom.html">Шоурум</a>
+          <a href="about.html">О студии</a>
+        </div>
+        <div class="footer-col">
+          <span class="col-title">Клиентам</span>
+          <a href="request.html">Замер</a>
+          <a href="delivery.html">Доставка и самовывоз</a>
+          <a href="privacy.html">Политика конфиденциальности</a>
+        </div>
+        <div class="footer-col">
+          <span class="col-title">Контакты</span>
+          <span>Москва</span>
+          <a href="tel:+74950000000">+7 495 000–00–00</a>
+          <a href="mailto:hello@tsogz.ru">hello@tsogz.ru</a>
+        </div>
+      </div>
+    </div>
+
+    <p class="copyright">© 2026 TSOGZ</p>
+    <p class="footer-privacy"><a href="privacy.html">Политика конфиденциальности</a></p>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.filter-row').forEach(function (group) {
+    group.addEventListener('click', function (e) {
+      var chip = e.target.closest('.filter-chip');
+      if (!chip) return;
+      group.querySelectorAll('.filter-chip').forEach(function (c) {
+        c.setAttribute('aria-pressed', 'false');
+        c.setAttribute('aria-checked', 'false');
+      });
+      chip.setAttribute('aria-pressed', 'true');
+      chip.setAttribute('aria-checked', 'true');
+    });
+  });
+</script>
+
+</body>
+</html>

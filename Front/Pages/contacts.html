@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контакты — TSOGZ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@500&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-meta">
+      <span>Санкт-Петербург</span>
+      <span>+7 (495) 000–00–00</span>
+    </div>
+    <a href="index.html" class="logo">TSOGZ</a>
+    <nav class="main-nav" aria-label="Основная навигация">
+      <a href="portfolio.html">Портфолио</a>
+      <a href="services.html">Услуги</a>
+      <a href="showroom.html">Шоурум</a>
+      <a href="contacts.html">Контакты</a>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero page-hero--image" style="background-image: url('https://placehold.co/1440x273');">
+  <nav class="breadcrumbs" aria-label="Хлебные крошки">
+    <a href="index.html">Главная</a>
+    <span aria-hidden="true">/</span>
+    <span class="current" aria-current="page">Контакты</span>
+  </nav>
+  <h1>Контакты</h1>
+  <p class="lede">Шоурум, студия и запись на бесплатный замер</p>
+</section>
+
+<main>
+  <section class="contacts">
+    <div class="contacts-info">
+      <div class="info-block">
+        <span class="eyebrow">Адрес</span>
+        <h2>Санкт-Петербург, шоурум TSOGZ</h2>
+        <p class="muted">ул. Патриаршие Пруды, 12</p>
+      </div>
+
+      <div class="info-block">
+        <span class="eyebrow">Телефон</span>
+        <h2><a href="tel:+74950000000">+7 495 000–00–00</a></h2>
+        <p class="muted">Ежедневно 10:00–20:00</p>
+      </div>
+
+      <div class="info-block">
+        <span class="eyebrow">Email</span>
+        <h2><a href="mailto:hello@tsogz.ru">hello@tsogz.ru</a></h2>
+        <p class="muted">Ответим в течение рабочего дня</p>
+      </div>
+
+      <div class="info-block">
+        <span class="eyebrow">Соцсети</span>
+        <h2>Telegram / Instagram</h2>
+        <p class="muted">@tsogz.studio</p>
+      </div>
+
+      <div class="btn-row">
+        <a href="request.html" class="btn btn-fill">Записаться на замер</a>
+        <a href="#map" class="btn btn-outline">Построить маршрут</a>
+      </div>
+    </div>
+
+    <div id="map" class="contacts-map" style="background-image: url('https://placehold.co/656x601');" role="img" aria-label="Карта расположения шоурума на Патриарших Прудах">
+      <div class="map-card">
+        <span class="eyebrow">Шоурум</span>
+        <h3>Патриаршие Пруды</h3>
+        <p>ул. Патриаршие Пруды, 12</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-band">
+    <div class="contact-band-head">
+      <h2>Написать нам</h2>
+      <p>Оставьте заявку и мы перезвоним и подскажем по формату работы</p>
+    </div>
+
+    <form>
+      <div class="form-grid">
+        <div class="field">
+          <label for="name">Имя</label>
+          <input type="text" id="name" name="name" placeholder="Как к вам обращаться?" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="phone">Телефон</label>
+          <input type="tel" id="phone" name="phone" placeholder="+7" autocomplete="tel">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="message">Сообщение</label>
+        <textarea id="message" name="message" placeholder="Расскажите о задаче или площади объекта"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-fill">Отправить заявку</button>
+      <p class="consent">Нажимая кнопку, вы соглашаетесь на обработку персональных данных</p>
+    </form>
+  </section>
+
+  <section class="cta-banner">
+    <h2>Начните с бесплатного замера</h2>
+    <p>Оставим заявку и подготовим ориентир по стоимости проекта</p>
+    <div class="btn-row">
+      <a href="request.html" class="btn btn-fill">Записаться на замер</a>
+      <a href="#" class="btn btn-outline-light">Консультация</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="logo">TSOGZ</span>
+        <p>Студия интерьера и шоурум</p>
+      </div>
+
+      <div class="footer-columns">
+        <div class="footer-col">
+          <span class="col-title">Проекты</span>
+          <a href="portfolio.html">Портфолио</a>
+          <a href="services.html">Услуги</a>
+          <a href="showroom.html">Шоурум</a>
+          <a href="about.html">О студии</a>
+        </div>
+        <div class="footer-col">
+          <span class="col-title">Клиентам</span>
+          <a href="request.html">Замер</a>
+          <a href="delivery.html">Доставка и самовывоз</a>
+          <a href="privacy.html">Политика конфиденциальности</a>
+        </div>
+        <div class="footer-col">
+          <span class="col-title">Контакты</span>
+          <span>Москва</span>
+          <a href="tel:+74950000000">+7 495 000–00–00</a>
+          <a href="mailto:hello@tsogz.ru">hello@tsogz.ru</a>
+        </div>
+      </div>
+    </div>
+
+    <p class="copyright">© 2026 TSOGZ</p>
+    <p class="footer-privacy"><a href="privacy.html">Политика конфиденциальности</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
