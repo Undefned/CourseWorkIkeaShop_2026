@@ -1,22 +1,24 @@
 -- ============================================================
 -- TSOGZ — database schema
 -- Target: PostgreSQL 14+
--- Maps 1:1 to the content on: index, portfolio, project, services,
--- showroom, product-yoga, about, contacts, request, delivery, privacy
+-- Maps to: index, portfolio, project, services, showroom,
+-- product-yoga, contacts, request
+-- (about / delivery / privacy — статичный текст, БД не нужна)
+-- (team / faq — статичны, не грузятся из БД)
+--
+-- No external file storage: all images live in the DB as BYTEA.
+-- Serve them via an app route, e.g. GET /image/:table/:id that
+-- does SELECT data, mime_type FROM ... and sets Content-Type,
+-- using updated_at for ETag / Last-Modified so browsers can cache.
 -- ============================================================
 
 -- Clean re-run support (dev only — remove in production)
 DROP TABLE IF EXISTS leads CASCADE;
-DROP TABLE IF EXISTS policy_sections CASCADE;
-DROP TABLE IF EXISTS delivery_rules CASCADE;
-DROP TABLE IF EXISTS studio_locations CASCADE;
-DROP TABLE IF EXISTS studio_values CASCADE;
 DROP TABLE IF EXISTS service_package_features CASCADE;
 DROP TABLE IF EXISTS service_packages CASCADE;
-DROP TABLE IF EXISTS faq_items CASCADE;
-DROP TABLE IF EXISTS team_members CASCADE;
 DROP TABLE IF EXISTS product_images CASCADE;
 DROP TABLE IF EXISTS products CASCADE;
+DROP TABLE IF EXISTS collection_images CASCADE;
 DROP TABLE IF EXISTS collections CASCADE;
 DROP TABLE IF EXISTS product_categories CASCADE;
 DROP TABLE IF EXISTS project_images CASCADE;
@@ -27,8 +29,7 @@ DROP TABLE IF EXISTS company_info CASCADE;
 
 -- ============================================================
 -- 1. Project types
---    Used by: portfolio.html filters (Квартиры/Дома/Коммерция),
---    request.html + contacts.html form chips (Квартира/Дом/Коммерция)
+--    Used by: portfolio.html filters, request.html + contacts.html chips
 -- ============================================================
 
 CREATE TABLE project_types (
@@ -48,13 +49,13 @@ CREATE TABLE projects (
   title             TEXT NOT NULL,               -- 'Садовые кварталы'
   slug              TEXT NOT NULL UNIQUE,        -- 'sadovye-kvartaly'
   project_type_id   INTEGER NOT NULL REFERENCES project_types(id),
-  area_m2           NUMERIC(8,1),                -- 86.0
-  style             TEXT,                        -- 'Современная классика'
-  year              SMALLINT,                    -- 2025
-  duration_label    TEXT,                        -- '10 недель'
-  intro             TEXT,                        -- hero subheading on project.html
-  about_title       TEXT,                        -- 'Свет, текстуры и спокойный ритм'
-  about_body        TEXT,                        -- about-card paragraph
+  area_m2           NUMERIC(8,1),
+  style             TEXT,
+  year              SMALLINT,
+  duration_label    TEXT,
+  intro             TEXT,
+  about_title       TEXT,
+  about_body        TEXT,
   is_featured       BOOLEAN NOT NULL DEFAULT FALSE,
   sort_order        INTEGER NOT NULL DEFAULT 0,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -67,11 +68,16 @@ CREATE INDEX idx_projects_featured ON projects(is_featured) WHERE is_featured = 
 CREATE TABLE project_images (
   id          SERIAL PRIMARY KEY,
   project_id  INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-  url         TEXT NOT NULL,
+  data        BYTEA NOT NULL,               -- бинарник изображения
+  mime_type   TEXT NOT NULL,                -- 'image/webp', 'image/jpeg', 'image/png'
+  byte_size   INTEGER NOT NULL CHECK (byte_size <= 8388608),  -- max 8 MB
+  width       INTEGER,                      -- для <img width/height>, чтобы не прыгал layout
+  height      INTEGER,
   alt         TEXT,
   role        TEXT NOT NULL DEFAULT 'gallery'
               CHECK (role IN ('cover', 'thumb', 'hero', 'detail', 'gallery')),
-  sort_order  INTEGER NOT NULL DEFAULT 0
+  sort_order  INTEGER NOT NULL DEFAULT 0,
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()   -- для ETag / Last-Modified при отдаче
 );
 
 CREATE INDEX idx_project_images_project ON project_images(project_id);
@@ -91,6 +97,8 @@ CREATE TABLE product_categories (
 
 -- ============================================================
 -- 4. Collections (featured collection card, e.g. 'Коллекция Alva')
+--    Cover image lives in its own table so it carries the same
+--    metadata (size/dimensions/alt) as project/product images.
 -- ============================================================
 
 CREATE TABLE collections (
@@ -99,9 +107,23 @@ CREATE TABLE collections (
   slug         TEXT NOT NULL UNIQUE,
   meta_label   TEXT,                   -- 'Мебель · в наличии'
   description  TEXT,
-  cover_image  TEXT,
   is_active    BOOLEAN NOT NULL DEFAULT TRUE
 );
+
+CREATE TABLE collection_images (
+  id             SERIAL PRIMARY KEY,
+  collection_id  INTEGER NOT NULL REFERENCES collections(id) ON DELETE CASCADE,
+  data           BYTEA NOT NULL,
+  mime_type      TEXT NOT NULL,
+  byte_size      INTEGER NOT NULL CHECK (byte_size <= 8388608),
+  width          INTEGER,
+  height         INTEGER,
+  alt            TEXT,
+  sort_order     INTEGER NOT NULL DEFAULT 0,
+  updated_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_collection_images_collection ON collection_images(collection_id);
 
 
 -- ============================================================
@@ -110,20 +132,21 @@ CREATE TABLE collections (
 
 CREATE TABLE products (
   id                    SERIAL PRIMARY KEY,
-  name                  TEXT NOT NULL,             -- 'Кресло Yoga'
-  slug                  TEXT NOT NULL UNIQUE,      -- 'kreslo-yoga'
-  sku                   TEXT UNIQUE,               -- 'YG-01'
+  name                  TEXT NOT NULL,
+  slug                  TEXT NOT NULL UNIQUE,
+  sku                   TEXT UNIQUE,
   product_category_id   INTEGER NOT NULL REFERENCES product_categories(id),
   collection_id         INTEGER REFERENCES collections(id),
-  price                 NUMERIC(10,2) NOT NULL,    -- 89000.00
+  price                 NUMERIC(10,2) NOT NULL,
   currency              TEXT NOT NULL DEFAULT 'RUB',
-  material              TEXT,                      -- 'Бук, ткань'
-  dimensions            TEXT,                      -- '78 × 82 × 75 см'
-  availability          TEXT,                      -- 'В шоуруме'
-  lead_time             TEXT,                      -- '1–3 дня'
-  short_description     TEXT,                      -- card/hero description
-  long_description      TEXT,                      -- 'О товаре' block
-  is_partner_only       BOOLEAN NOT NULL DEFAULT FALSE,
+  material              TEXT,
+  dimensions            TEXT,
+  availability          TEXT,
+  lead_time             TEXT,
+  short_description     TEXT,
+  long_description      TEXT,
+  is_partner_only       BOOLEAN NOT NULL DEFAULT FALSE,  -- независимо от категории:
+                                                          -- обычный товар, доступный только партнёрам
   is_active             BOOLEAN NOT NULL DEFAULT TRUE,
   sort_order            INTEGER NOT NULL DEFAULT 0,
   created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -136,52 +159,34 @@ CREATE INDEX idx_products_collection ON products(collection_id);
 CREATE TABLE product_images (
   id          SERIAL PRIMARY KEY,
   product_id  INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-  url         TEXT NOT NULL,
+  data        BYTEA NOT NULL,
+  mime_type   TEXT NOT NULL,
+  byte_size   INTEGER NOT NULL CHECK (byte_size <= 8388608),
+  width       INTEGER,
+  height      INTEGER,
   alt         TEXT,
   is_primary  BOOLEAN NOT NULL DEFAULT FALSE,
-  sort_order  INTEGER NOT NULL DEFAULT 0
+  sort_order  INTEGER NOT NULL DEFAULT 0,
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE INDEX idx_product_images_product ON product_images(product_id);
 
-
--- ============================================================
--- 6. Team (index.html "Команда")
--- ============================================================
-
-CREATE TABLE team_members (
-  id          SERIAL PRIMARY KEY,
-  name        TEXT NOT NULL,     -- 'Анна К.'
-  role        TEXT NOT NULL,     -- 'Ведущий дизайнер'
-  photo_url   TEXT,
-  sort_order  INTEGER NOT NULL DEFAULT 0,
-  is_active   BOOLEAN NOT NULL DEFAULT TRUE
-);
+-- Ровно одно основное фото на товар (для превью в каталоге)
+CREATE UNIQUE INDEX idx_product_images_one_primary
+  ON product_images(product_id) WHERE is_primary = TRUE;
 
 
 -- ============================================================
--- 7. FAQ (index.html "Частые вопросы")
--- ============================================================
-
-CREATE TABLE faq_items (
-  id          SERIAL PRIMARY KEY,
-  question    TEXT NOT NULL,
-  answer      TEXT NOT NULL,
-  sort_order  INTEGER NOT NULL DEFAULT 0,
-  is_active   BOOLEAN NOT NULL DEFAULT TRUE
-);
-
-
--- ============================================================
--- 8. Service packages (services.html pricing rows)
+-- 6. Service packages (services.html pricing rows)
 -- ============================================================
 
 CREATE TABLE service_packages (
   id             SERIAL PRIMARY KEY,
-  name           TEXT NOT NULL,             -- 'Дизайн-проект'
+  name           TEXT NOT NULL,
   slug           TEXT NOT NULL UNIQUE,
   number_label   TEXT,                      -- '01', '02', '03' (display only)
-  price_from     NUMERIC(10,2) NOT NULL,    -- 4500.00
+  price_from     NUMERIC(10,2) NOT NULL,
   price_unit     TEXT NOT NULL DEFAULT '₽/м²',
   description    TEXT,
   sort_order     INTEGER NOT NULL DEFAULT 0,
@@ -191,7 +196,7 @@ CREATE TABLE service_packages (
 CREATE TABLE service_package_features (
   id                  SERIAL PRIMARY KEY,
   service_package_id  INTEGER NOT NULL REFERENCES service_packages(id) ON DELETE CASCADE,
-  feature             TEXT NOT NULL,        -- 'Обмерный план'
+  feature             TEXT NOT NULL,
   sort_order          INTEGER NOT NULL DEFAULT 0
 );
 
@@ -199,45 +204,8 @@ CREATE INDEX idx_service_features_package ON service_package_features(service_pa
 
 
 -- ============================================================
--- 9. Studio values (about.html "Ценности")
--- ============================================================
-
-CREATE TABLE studio_values (
-  id            SERIAL PRIMARY KEY,
-  number_label  TEXT NOT NULL,   -- '01'
-  title         TEXT NOT NULL,   -- 'Ясность'
-  description   TEXT NOT NULL,
-  sort_order    INTEGER NOT NULL DEFAULT 0
-);
-
-
--- ============================================================
--- 10. Studio locations / geography (about.html "География")
--- ============================================================
-
-CREATE TABLE studio_locations (
-  id           SERIAL PRIMARY KEY,
-  city         TEXT NOT NULL,   -- 'Санкт-Петербург'
-  description  TEXT NOT NULL,   -- 'Студия, шоурум, замеры'
-  sort_order   INTEGER NOT NULL DEFAULT 0
-);
-
-
--- ============================================================
--- 11. Delivery rules (delivery.html "Условия доставки")
--- ============================================================
-
-CREATE TABLE delivery_rules (
-  id           SERIAL PRIMARY KEY,
-  title        TEXT NOT NULL,   -- 'Санкт-Петербург', 'Ленинградская область', 'Крупногабарит'
-  description  TEXT NOT NULL,
-  sort_order   INTEGER NOT NULL DEFAULT 0
-);
-
-
--- ============================================================
--- 12. Company info — single-row settings table
---     (header meta, footer, contacts.html, delivery.html pickup block)
+-- 7. Company info — single-row settings table
+--    Используется на contacts.html (и в header/footer)
 -- ============================================================
 
 CREATE TABLE company_info (
@@ -257,21 +225,8 @@ CREATE TABLE company_info (
 
 
 -- ============================================================
--- 13. Privacy policy sections (privacy.html, numbered 1..9)
--- ============================================================
-
-CREATE TABLE policy_sections (
-  id          SERIAL PRIMARY KEY,
-  number      SMALLINT NOT NULL UNIQUE,  -- 1..9
-  title       TEXT NOT NULL,             -- 'Какие данные мы собираем'
-  body        TEXT NOT NULL,
-  sort_order  INTEGER NOT NULL DEFAULT 0
-);
-
-
--- ============================================================
--- 14. Leads — both the short contacts.html form and the full
---     request.html measurement-request form write here
+-- 8. Leads — both the short contacts.html form and the full
+--    request.html measurement-request form write here
 -- ============================================================
 
 CREATE TABLE leads (
@@ -285,7 +240,7 @@ CREATE TABLE leads (
   area_m2          NUMERIC(8,1),                  -- only on request.html
   message          TEXT,
   source_page      TEXT NOT NULL,                 -- 'contacts', 'request', etc.
-  consent_given     BOOLEAN NOT NULL DEFAULT FALSE,
+  consent_given    BOOLEAN NOT NULL DEFAULT FALSE,
   status           TEXT NOT NULL DEFAULT 'new'
                    CHECK (status IN ('new', 'contacted', 'scheduled', 'closed', 'spam')),
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
