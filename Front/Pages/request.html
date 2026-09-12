@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@500&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<style>.form-status{margin-top:8px;font-size:14px;}.form-status--ok{color:#2e7d32;}.form-status--error{color:#c62828;}</style>
 </head>
 <body>
 
@@ -63,7 +64,7 @@
     <div class="request-form-card" id="request-form">
       <h2>Оставить заявку</h2>
 
-      <form>
+      <form id="request-lead-form">
         <div class="form-grid">
           <div class="field">
             <label for="name">Имя</label>
@@ -83,9 +84,9 @@
         <fieldset class="chip-group" style="border: none; padding: 0; margin: 0;">
           <legend class="field-label">Тип объекта</legend>
           <div class="chip-row" role="radiogroup" aria-label="Тип объекта">
-            <button type="button" class="chip" role="radio" aria-pressed="true" aria-checked="true">Квартира</button>
-            <button type="button" class="chip" role="radio" aria-pressed="false" aria-checked="false">Дом</button>
-            <button type="button" class="chip" role="radio" aria-pressed="false" aria-checked="false">Коммерция</button>
+            <button type="button" class="chip" data-type="apartment" role="radio" aria-pressed="true" aria-checked="true">Квартира</button>
+            <button type="button" class="chip" data-type="house" role="radio" aria-pressed="false" aria-checked="false">Дом</button>
+            <button type="button" class="chip" data-type="commercial" role="radio" aria-pressed="false" aria-checked="false">Коммерция</button>
           </div>
         </fieldset>
 
@@ -101,6 +102,7 @@
 
         <button type="submit" class="btn btn-fill">Отправить заявку</button>
         <p class="consent">Нажимая кнопку, вы соглашаетесь на обработку персональных данных</p>
+        <p class="form-status" id="request-lead-status" role="status" aria-live="polite"></p>
       </form>
     </div>
   </section>
@@ -142,21 +144,8 @@
   </div>
 </footer>
 
-<script>
-  // Simple single-select behaviour for the "Тип объекта" chip group
-  document.querySelectorAll('.chip-row').forEach(function (group) {
-    group.addEventListener('click', function (e) {
-      var chip = e.target.closest('.chip');
-      if (!chip) return;
-      group.querySelectorAll('.chip').forEach(function (c) {
-        c.setAttribute('aria-pressed', 'false');
-        c.setAttribute('aria-checked', 'false');
-      });
-      chip.setAttribute('aria-pressed', 'true');
-      chip.setAttribute('aria-checked', 'true');
-    });
-  });
-</script>
+<script src="js/api.js"></script>
+<script src="js/request.js"></script>
 
 </body>
 </html>

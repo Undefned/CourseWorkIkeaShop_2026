@@ -39,11 +39,11 @@
 <main>
   <nav class="filter-bar" aria-label="Фильтр по категориям">
     <div class="filter-row" role="radiogroup" aria-label="Категория товаров">
-      <button type="button" class="filter-chip" role="radio" aria-pressed="true" aria-checked="true">Все</button>
-      <button type="button" class="filter-chip" role="radio" aria-pressed="false" aria-checked="false">Мебель</button>
-      <button type="button" class="filter-chip" role="radio" aria-pressed="false" aria-checked="false">Свет</button>
-      <button type="button" class="filter-chip" role="radio" aria-pressed="false" aria-checked="false">Декор</button>
-      <button type="button" class="filter-chip" role="radio" aria-pressed="false" aria-checked="false">Для партнеров</button>
+      <button type="button" class="filter-chip" data-category="" role="radio" aria-pressed="true" aria-checked="true">Все</button>
+      <button type="button" class="filter-chip" data-category="furniture" role="radio" aria-pressed="false" aria-checked="false">Мебель</button>
+      <button type="button" class="filter-chip" data-category="lighting" role="radio" aria-pressed="false" aria-checked="false">Свет</button>
+      <button type="button" class="filter-chip" data-category="decor" role="radio" aria-pressed="false" aria-checked="false">Декор</button>
+      <button type="button" class="filter-chip" data-category="partners" role="radio" aria-pressed="false" aria-checked="false">Для партнеров</button>
     </div>
   </nav>
 
@@ -55,56 +55,13 @@
         <h2>Коллекция Alva</h2>
         <p class="meta">Мебель · в наличии</p>
         <p class="desc">Мягкие формы, натуральные материалы и спокойная палитра — для жилых пространств.</p>
-        <a href="project.html" class="btn btn-outline">Смотреть коллекцию</a>
+        <a href="showroom.html" class="btn btn-outline">Смотреть коллекцию</a>
       </div>
     </div>
   </section>
 
   <section class="product-section" aria-label="Каталог шоурума">
-    <div class="product-grid">
-      <a class="product-card" href="product-yoga.html">
-        <img src="https://placehold.co/432x360" alt="Кресло Yoga">
-        <div>
-          <h3>Кресло Yoga</h3>
-          <p class="meta">Мебель · 89 000 ₽</p>
-        </div>
-      </a>
-      <a class="product-card" href="#">
-        <img src="https://placehold.co/432x360" alt="Стол MATILDA">
-        <div>
-          <h3>Cтол MATILDA</h3>
-          <p class="meta">Мебель · 74 000 ₽</p>
-        </div>
-      </a>
-      <a class="product-card" href="#">
-        <img src="https://placehold.co/432x360" alt="Двуспальная кровать LAV BED">
-        <div>
-          <h3>Двуспальная кровать LAV BED</h3>
-          <p class="meta">Мебель · 56 000 ₽</p>
-        </div>
-      </a>
-      <a class="product-card" href="#">
-        <img src="https://placehold.co/432x360" alt="Диван Atelier">
-        <div>
-          <h3>Диван Atelier</h3>
-          <p class="meta">Мебель · 28 000 ₽</p>
-        </div>
-      </a>
-      <a class="product-card" href="#">
-        <img src="https://placehold.co/432x360" alt="Стеллаж Line">
-        <div>
-          <h3>Стеллаж Line</h3>
-          <p class="meta">Мебель · 210 000 ₽</p>
-        </div>
-      </a>
-      <a class="product-card" href="#">
-        <img src="https://placehold.co/432x360" alt="Пуф Arc">
-        <div>
-          <h3>Пуф Arc</h3>
-          <p class="meta">Мебель · 12 000 ₽</p>
-        </div>
-      </a>
-    </div>
+    <div class="product-grid"></div>
 
     <div class="load-more">
       <button type="button" class="btn btn-outline">Показать еще</button>
@@ -165,20 +122,8 @@
   </div>
 </footer>
 
-<script>
-  document.querySelectorAll('.filter-row').forEach(function (group) {
-    group.addEventListener('click', function (e) {
-      var chip = e.target.closest('.filter-chip');
-      if (!chip) return;
-      group.querySelectorAll('.filter-chip').forEach(function (c) {
-        c.setAttribute('aria-pressed', 'false');
-        c.setAttribute('aria-checked', 'false');
-      });
-      chip.setAttribute('aria-pressed', 'true');
-      chip.setAttribute('aria-checked', 'true');
-    });
-  });
-</script>
+<script src="js/api.js"></script>
+<script src="js/showroom.js"></script>
 
 </body>
 </html>

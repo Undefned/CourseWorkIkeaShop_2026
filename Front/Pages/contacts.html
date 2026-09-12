@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@500&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<style>.form-status{margin-top:8px;font-size:14px;}.form-status--ok{color:#2e7d32;}.form-status--error{color:#c62828;}</style>
 </head>
 <body>
 
@@ -84,7 +85,7 @@
       <p>Оставьте заявку и мы перезвоним и подскажем по формату работы</p>
     </div>
 
-    <form>
+    <form id="contact-lead-form">
       <div class="form-grid">
         <div class="field">
           <label for="name">Имя</label>
@@ -103,6 +104,7 @@
 
       <button type="submit" class="btn btn-fill">Отправить заявку</button>
       <p class="consent">Нажимая кнопку, вы соглашаетесь на обработку персональных данных</p>
+      <p class="form-status" id="contact-lead-status" role="status" aria-live="polite"></p>
     </form>
   </section>
 
@@ -151,6 +153,9 @@
     <p class="footer-privacy"><a href="privacy.html">Политика конфиденциальности</a></p>
   </div>
 </footer>
+
+<script src="js/api.js"></script>
+<script src="js/contacts.js"></script>
 
 </body>
 </html>

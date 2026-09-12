@@ -41,81 +41,21 @@
 
   <div class="container">
     <div class="filters">
-      <div class="filter-btn active">Все</div>
-      <div class="filter-btn">Квартиры</div>
-      <div class="filter-btn">Дома</div>
-      <div class="filter-btn">Коммерция</div>
+      <div class="filter-btn active" data-type="">Все</div>
+      <div class="filter-btn" data-type="apartment">Квартиры</div>
+      <div class="filter-btn" data-type="house">Дома</div>
+      <div class="filter-btn" data-type="commercial">Коммерция</div>
     </div>
   </div>
 
   <section>
     <div class="container">
-      <a class="featured-project" href="project.html">
-        <img src="https://placehold.co/980x520" alt="Садовые кварталы">
-        <div class="featured-card">
-          <span class="eyebrow">Избранный проект</span>
-          <h3>Садовые кварталы</h3>
-          <span class="meta">Квартира · 86 м² · Современная классика</span>
-          <p class="desc">Планировка, визуализации и комплектация из шоурума в одном кейсе.</p>
-          <span class="btn btn-outline-dark">Смотреть проект</span>
-        </div>
-      </a>
+      <div id="featured-project-slot"></div>
 
-      <div class="project-list">
-        <div class="project-row">
-          <a class="project-tile" href="project.html">
-            <div class="thumb"><img src="https://placehold.co/664x420" alt="Дом в Подмосковье"></div>
-            <div class="label">
-              <h4>Дом в Подмосковье</h4>
-              <span class="meta">Дом · 240 м²</span>
-            </div>
-          </a>
-          <a class="project-tile" href="project.html">
-            <div class="thumb"><img src="https://placehold.co/664x420" alt="Кафе Патриаршие"></div>
-            <div class="label">
-              <h4>Кафе Патриаршие</h4>
-              <span class="meta">Коммерция · 120 м²</span>
-            </div>
-          </a>
-        </div>
+      <div class="project-list" id="project-list"></div>
 
-        <div class="project-row">
-          <a class="project-tile tall" href="project.html">
-            <div class="thumb"><img src="https://placehold.co/664x480" alt="Апартаменты на Патриарших"></div>
-            <div class="label">
-              <h4>Апартаменты на Патриарших</h4>
-              <span class="meta">Квартира · 112 м²</span>
-            </div>
-          </a>
-          <a class="project-tile tall" href="project.html">
-            <div class="thumb"><img src="https://placehold.co/664x480" alt="Дом в Хамовниках"></div>
-            <div class="label">
-              <h4>Дом в Хамовниках</h4>
-              <span class="meta">Дом · 180 м²</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="project-row">
-          <a class="project-tile" href="project.html">
-            <div class="thumb"><img src="https://placehold.co/664x420" alt="Таунхаус в Сколково"></div>
-            <div class="label">
-              <h4>Таунхаус в Сколково</h4>
-              <span class="meta">Дом · 195 м²</span>
-            </div>
-          </a>
-          <a class="project-tile" href="project.html">
-            <div class="thumb"><img src="https://placehold.co/664x420" alt="Квартира на Якиманке"></div>
-            <div class="label">
-              <h4>Квартира на Якиманке</h4>
-              <span class="meta">Квартира · 74 м²</span>
-            </div>
-          </a>
-        </div>
-      </div>
-
-      <div class="show-more">
-        <span class="btn btn-outline-dark">Показать еще</span>
+      <div class="show-more" style="display:none;">
+        <span class="btn btn-outline-dark" id="show-more-btn">Показать еще</span>
       </div>
     </div>
   </section>
@@ -148,6 +88,7 @@
           </div>
           <div class="footer-col">
             <span class="col-title">Клиентам</span>
+            <a href="#">Личный кабинет</a>
             <a href="request.html#request-form">Замер</a>
             <a href="delivery.html">Доставка и самовывоз</a>
             <a href="privacy.html">Политика конфиденциальности</a>
@@ -167,5 +108,7 @@
     </div>
   </footer>
 
+  <script src="js/api.js"></script>
+  <script src="js/portfolio.js"></script>
 </body>
 </html>

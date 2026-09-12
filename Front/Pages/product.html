@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Кресло Yoga — TSOGZ</title>
+<title>Товар — TSOGZ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@500&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
@@ -26,107 +26,9 @@
   </div>
 </header>
 
-<div class="page-hero" style="padding-bottom: 32px;">
-  <nav class="breadcrumbs" aria-label="Хлебные крошки">
-    <a href="index.html">Главная</a>
-    <span aria-hidden="true">/</span>
-    <a href="showroom.html">Шоурум</a>
-    <span aria-hidden="true">/</span>
-    <span class="current" aria-current="page">Кресло Yoga</span>
-  </nav>
+<div id="product-root">
+  <div class="page-hero"><p class="muted">Загрузка товара…</p></div>
 </div>
-
-<main>
-  <section class="product-detail">
-    <div class="product-gallery">
-      <img class="main-image" src="https://placehold.co/760x640" alt="Кресло Yoga, общий вид">
-      <div class="thumb-row" role="group" aria-label="Дополнительные фото">
-        <button type="button" aria-current="true">
-          <img src="https://placehold.co/120x96" alt="Кресло Yoga, вид 1">
-        </button>
-        <button type="button" aria-current="false">
-          <img src="https://placehold.co/120x96" alt="Кресло Yoga, вид 2">
-        </button>
-        <button type="button" aria-current="false">
-          <img src="https://placehold.co/120x96" alt="Кресло Yoga, вид 3">
-        </button>
-      </div>
-    </div>
-
-    <div class="product-info">
-      <span class="eyebrow">Мебель</span>
-      <h1>Кресло Yoga</h1>
-      <p class="product-price">89 000 ₽</p>
-      <p class="description">Мягкий силуэт, плотная ткань и спокойный тон — кресло для чтения, разговоров и долгих вечеров.</p>
-
-      <dl class="spec-list">
-        <div class="spec-row">
-          <dt>Артикул</dt>
-          <dd>YG-01</dd>
-        </div>
-        <div class="spec-row">
-          <dt>Категория</dt>
-          <dd>Мебель</dd>
-        </div>
-        <div class="spec-row">
-          <dt>Материал</dt>
-          <dd>Бук, ткань</dd>
-        </div>
-        <div class="spec-row">
-          <dt>Размер</dt>
-          <dd>78 × 82 × 75 см</dd>
-        </div>
-        <div class="spec-row">
-          <dt>Наличие</dt>
-          <dd>В шоуруме</dd>
-        </div>
-        <div class="spec-row">
-          <dt>Срок</dt>
-          <dd>1–3 дня</dd>
-        </div>
-      </dl>
-
-      <div class="btn-row">
-        <a href="request.html#request-form" class="btn btn-fill">Запросить в шоуруме</a>
-        <a href="contacts.html#contact-form" class="btn btn-outline">Консультация</a>
-      </div>
-
-      <p class="product-note">Доставим по городу или заберете из шоурума. Для клиентов студии специальные условия комплектации.</p>
-    </div>
-  </section>
-
-  <section class="info-band info-band--soft">
-    <h2>О кресле</h2>
-    <p>Yoga собрано на каркасе из массива бука с эластичными ремнями и пенополиуретаном разной плотности. Обивка снимается для ухода. Подойдет к жилым пространствам в современной классике и минимализме.</p>
-  </section>
-
-  <section class="related-products">
-    <h2>Похожие товары</h2>
-    <div class="product-grid">
-      <a class="product-card" href="#">
-        <img src="https://placehold.co/429x360" alt="Стол MATILDA">
-        <div>
-          <h3>Cтол MATILDA</h3>
-          <p class="meta">Мебель · 74 000 ₽</p>
-        </div>
-      </a>
-      <a class="product-card" href="#">
-        <img src="https://placehold.co/429x360" alt="Диван Atelier">
-        <div>
-          <h3>Диван Atelier</h3>
-          <p class="meta">Мебель · 28 000 ₽</p>
-        </div>
-      </a>
-      <a class="product-card" href="#">
-        <img src="https://placehold.co/429x360" alt="Стеллаж Line">
-        <div>
-          <h3>Стеллаж Line</h3>
-          <p class="meta">Мебель · 210 000 ₽</p>
-        </div>
-      </a>
-    </div>
-  </section>
-</main>
 
 <footer class="site-footer">
   <div class="footer-inner">
@@ -164,19 +66,8 @@
   </div>
 </footer>
 
-<script>
-  document.querySelectorAll('.thumb-row button').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      document.querySelectorAll('.thumb-row button').forEach(function (b) {
-        b.setAttribute('aria-current', 'false');
-      });
-      btn.setAttribute('aria-current', 'true');
-      var mainImage = document.querySelector('.main-image');
-      var thumbSrc = btn.querySelector('img').src;
-      mainImage.src = thumbSrc.replace('120x96', '760x640');
-    });
-  });
-</script>
+<script src="js/api.js"></script>
+<script src="js/product.js"></script>
 
 </body>
 </html>

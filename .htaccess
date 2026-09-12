@@ -1,35 +1,40 @@
-# .htaccess
+# .htaccess — TSOGZ (CourseWorkIkeaShop_2026)
+# DocumentRoot = repo root (see docker-compose.yml: `.:/var/www/html`)
+
 RewriteEngine On
-# Для локальной разработки — корень сайта
 RewriteBase /
 
-# API маршруты
-RewriteRule ^api/auth/login/?$ api/auth/login.php [L,QSA]
-RewriteRule ^api/auth/register/?$ api/auth/register.php [L,QSA]
-RewriteRule ^api/auth/logout/?$ api/auth/logout.php [L,QSA]
-RewriteRule ^api/auth/me/?$ api/auth/me.php [L,QSA]
-RewriteRule ^api/materials/?$ api/materials.php [L,QSA]
-RewriteRule ^api/materials/view/?$ api/materials-view.php [L,QSA]
-RewriteRule ^api/schedule/?$ api/schedule.php [L,QSA]
-RewriteRule ^api/assignments/?$ api/assignments.php [L,QSA]
-RewriteRule ^api/support/?$ api/support.php [L,QSA]
-RewriteRule ^api/applications/?$ api/applications.php [L,QSA]
-RewriteRule ^api/user/?$ api/user.php [L,QSA]
+# ------------------------------------------------------------------
+# Never serve these directly over HTTP.
+# ------------------------------------------------------------------
+RewriteRule ^\.env$ - [F,L]
+RewriteRule ^sql/ - [F,L]
+RewriteRule ^Backend/Scripts/ - [F,L]
+RewriteRule ^docker-compose\.yml$ - [F,L]
 
-# Страницы
-RewriteRule ^$ index.html [L]
-RewriteRule ^about.html/?$ pages/about.html [L]
-RewriteRule ^blog.html/?$ pages/blog.html [L]
-RewriteRule ^dashboard.html/?$ pages/dashboard.html [L]
-RewriteRule ^knowledge-base.html/?$ pages/knowledge-base.html [L]
-RewriteRule ^schedule.html/?$ pages/schedule.html [L]
-RewriteRule ^support.html/?$ pages/support.html [L]
-RewriteRule ^teachers.html/?$ pages/teachers.html [L]
-RewriteRule ^login.html/?$ pages/login.html [L]
-RewriteRule ^register.html/?$ pages/register.html [L]
-RewriteRule ^privacy.html/?$ pages/privacy.html [L]
+# ------------------------------------------------------------------
+# API — everything under /api/ goes through the front controller.
+# Backend/Api/index.php parses the full request path itself, so a
+# single catch-all rewrite is enough; QSA keeps ?type=, ?slug=, etc.
+# ------------------------------------------------------------------
+RewriteRule ^api/(.*)$ Backend/Api/index.php [L,QSA]
 
-# Если файл не существует — 404
+# ------------------------------------------------------------------
+# Pages — flat URLs (e.g. /portfolio.html) map to Front/Pages/.
+# Keeping the URLs flat means the existing relative links between
+# pages (href="portfolio.html", href="styles.css", etc.) keep working
+# unchanged.
+# ------------------------------------------------------------------
+RewriteRule ^$ Front/Pages/index.html [L]
+RewriteRule ^styles\.css$ Front/Pages/styles.css [L]
+RewriteRule ^js/(.+)$ Front/Pages/js/$1 [L]
+RewriteRule ^([a-z0-9-]+)\.html$ Front/Pages/$1.html [L]
+
+# /Assets/* are real files at the repo root already — no rewrite needed.
+
+# ------------------------------------------------------------------
+# Anything else that isn't a real file/dir → 404.
+# ------------------------------------------------------------------
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ 404.html [L]
+RewriteRule ^(.*)$ - [R=404,L]
