@@ -186,7 +186,7 @@ body.tpl-b .page-intro p { margin: 0; max-width: 640px; font-size: 16px; line-he
 
 .page-home .hero { position:relative; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:140px 40px 96px; background:
       linear-gradient(rgba(0,0,0,.4), rgba(0,0,0,.4)),
-      url(/Assets/Hero.jpg) center/cover no-repeat; }
+      url(../../Assets/Hero.jpg) center/cover no-repeat; }
 .page-home .hero-inner { max-width:1200px; display:flex; flex-direction:column; align-items:center; gap:32px; text-align:center; }
 .page-home .hero-inner h1 { margin:0; font-family:var(--serif); font-weight:600; font-size:clamp(40px, 6vw, 96px); line-height:1.05; letter-spacing:0.5px; color:var(--text-inverse); }
 .page-home .hero-inner p { margin:0; max-width:820px; font-size:clamp(16px, 2vw, 24px); line-height:1.3; color:var(--text-inverse); opacity:.88; }
@@ -284,7 +284,7 @@ body.tpl-b .page-intro p { margin: 0; max-width: 640px; font-size: 16px; line-he
 
 .page-services .page-hero { padding:48px 48px; display:flex; flex-direction:column; gap:12px; background:
       linear-gradient(rgba(0,0,0,.4), rgba(0,0,0,.4)),
-      url(/Assets/Intro.png) center/cover no-repeat; }
+      url(../../Assets/Intro.png) center/cover no-repeat; }
 .page-services .page-hero h1 { margin:12px 0 0; font-family:var(--serif); font-weight:500; font-size:clamp(32px,5vw,48px); color:var(--text-inverse); }
 .page-services .page-hero p { margin:0; max-width:640px; font-size:16px; line-height:1.6; color:var(--text-inverse); }
 .page-services .pricing { padding:48px 40px 96px; }

@@ -24,7 +24,7 @@
       state.page = 1;
       grid.innerHTML = '';
     }
-    const url = `/api/products?category=${encodeURIComponent(state.category)}&page=${state.page}&limit=${LIMIT}`;
+    const url = `/products.php?category=${encodeURIComponent(state.category)}&page=${state.page}&limit=${LIMIT}`;
     const { data, meta } = await apiGet(url);
     grid.insertAdjacentHTML('beforeend', data.map(cardHtml).join(''));
     if (loadMoreWrap) {
@@ -57,7 +57,7 @@
   }
 
   if (featuredImg) {
-    apiGet('/api/products?collection=alva&limit=1')
+    apiGet('/products.php?collection=alva&limit=1')
       .then(({ data }) => {
         if (data[0] && data[0].cover_url) {
           featuredImg.src = data[0].cover_url;

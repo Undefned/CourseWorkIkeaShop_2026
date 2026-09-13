@@ -1,7 +1,19 @@
 // Shared helpers for the TSOGZ front end. Loaded before each page's own script.
 
+// All pages live in Front/Pages/, the API lives in Backend/Api/.
+// From /~s408229/CourseWorkIkeaShop_2026/Front/Pages/foo.html
+//   ../../Backend/Api/<route>  →  /~s408229/CourseWorkIkeaShop_2026/Backend/Api/<route>
+const API_BASE = '../../Backend/Api';
+
+function apiUrl(path) {
+  if (!path) return API_BASE;
+  if (/^https?:\/\//i.test(path)) return path;
+  const clean = path.startsWith('/') ? path.slice(1) : path;
+  return `${API_BASE}/${clean}`;
+}
+
 async function apiGet(path) {
-  const res = await fetch(path, { headers: { Accept: 'application/json' } });
+  const res = await fetch(apiUrl(path), { headers: { Accept: 'application/json' } });
   const json = await res.json().catch(() => null);
   if (!res.ok) {
     const message = json && json.error ? json.error.message : 'Ошибка запроса';
@@ -11,7 +23,7 @@ async function apiGet(path) {
 }
 
 async function apiPost(path, body) {
-  const res = await fetch(path, {
+  const res = await fetch(apiUrl(path), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(body),
@@ -63,7 +75,7 @@ function wireLeadForm(form, formType, statusEl, extra) {
     };
 
     try {
-      const result = await apiPost('/api/leads', payload);
+      const result = await apiPost('/leads.php', payload);
       statusEl.textContent = result.message || 'Заявка принята.';
       statusEl.className = 'form-status form-status--ok';
       form.reset();

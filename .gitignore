@@ -32,3 +32,5 @@ desktop.ini
 # ==================== Логи ====================
 *.log
 logs/
+
+config.local.php

@@ -37,7 +37,7 @@
 
   async function loadFeatured() {
     try {
-      const { data } = await apiGet('/api/projects?featured=1&limit=1');
+      const { data } = await apiGet('/projects.php?featured=1&limit=1');
       const item = data[0];
       if (!item) return;
       featuredSlot.innerHTML = `
@@ -61,7 +61,7 @@
       state.page = 1;
       listEl.innerHTML = '';
     }
-    const url = `/api/projects?type=${encodeURIComponent(state.type)}&page=${state.page}&limit=${LIMIT}`;
+    const url = `/projects.php?type=${encodeURIComponent(state.type)}&page=${state.page}&limit=${LIMIT}`;
     const { data, meta } = await apiGet(url);
     state.total = meta.total;
     renderRows(data, !reset);

@@ -105,7 +105,7 @@
   if (!slug) {
     notFound('Не указан проект.');
   } else {
-    apiGet(`/api/projects/${encodeURIComponent(slug)}`)
+    apiGet(`/project.php?slug=${encodeURIComponent(slug)}`)
       .then(({ data }) => render(data))
       .catch((err) => notFound(err.message));
   }

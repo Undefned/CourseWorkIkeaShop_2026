@@ -1,40 +1,28 @@
-# .htaccess — TSOGZ (CourseWorkIkeaShop_2026)
-# DocumentRoot = repo root (see docker-compose.yml: `.:/var/www/html`)
+# .htaccess — TSOGZ (CourseWorkIkeaShop_2026), repo root / static pages only.
+#
+# /api/* is NOT handled here. It's handled by Backend/Api/.htaccess:
+#  - Docker: an Apache Alias (see Backend/apache-overrides.conf, loaded by
+#    the Dockerfile) maps /api straight onto Backend/Api, so Apache walks
+#    into that directory and uses ITS .htaccess, not this one.
+#  - Helios: deploy the contents of Backend/Api as a directory literally
+#    named `api` under your docroot (e.g. public_html/api/) — then the
+#    URL /api/... already matches that folder 1:1, no alias needed, and
+#    the same Backend/Api/.htaccess applies unchanged.
 
 RewriteEngine On
 RewriteBase /
 
-# ------------------------------------------------------------------
-# Never serve these directly over HTTP.
-# ------------------------------------------------------------------
 RewriteRule ^\.env$ - [F,L]
 RewriteRule ^sql/ - [F,L]
-RewriteRule ^Backend/Scripts/ - [F,L]
 RewriteRule ^docker-compose\.yml$ - [F,L]
+RewriteRule ^Backend/ - [F,L]
 
-# ------------------------------------------------------------------
-# API — everything under /api/ goes through the front controller.
-# Backend/Api/index.php parses the full request path itself, so a
-# single catch-all rewrite is enough; QSA keeps ?type=, ?slug=, etc.
-# ------------------------------------------------------------------
-RewriteRule ^api/(.*)$ Backend/Api/index.php [L,QSA]
-
-# ------------------------------------------------------------------
-# Pages — flat URLs (e.g. /portfolio.html) map to Front/Pages/.
-# Keeping the URLs flat means the existing relative links between
-# pages (href="portfolio.html", href="styles.css", etc.) keep working
-# unchanged.
-# ------------------------------------------------------------------
 RewriteRule ^$ Front/Pages/index.html [L]
 RewriteRule ^styles\.css$ Front/Pages/styles.css [L]
 RewriteRule ^js/(.+)$ Front/Pages/js/$1 [L]
 RewriteRule ^([a-z0-9-]+)\.html$ Front/Pages/$1.html [L]
 
-# /Assets/* are real files at the repo root already — no rewrite needed.
-
-# ------------------------------------------------------------------
-# Anything else that isn't a real file/dir → 404.
-# ------------------------------------------------------------------
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ - [R=404,L]
+# Anything unmatched here just falls through to Apache's normal file
+# lookup (and 404s on its own) — deliberately no catch-all RewriteRule,
+# since an [R=404] here would fire for /api/* requests too, before they
+# ever reach Backend/Api/.htaccess (see note above).

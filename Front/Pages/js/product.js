@@ -113,7 +113,7 @@
   if (!slug) {
     notFound('Не указан товар.');
   } else {
-    apiGet(`/api/products/${encodeURIComponent(slug)}`)
+    apiGet(`/product.php?slug=${encodeURIComponent(slug)}`)
       .then(({ data }) => render(data))
       .catch((err) => notFound(err.message));
   }

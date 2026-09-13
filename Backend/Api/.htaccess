@@ -1,0 +1,26 @@
+# Backend/Api/.htaccess
+RewriteEngine On
+
+# Никогда не отдавать конфиги и lib/* напрямую
+<FilesMatch "^config(\.example|\.local)?\.php$">
+    Require all denied
+</FilesMatch>
+RewriteRule ^lib/ - [F,END]
+
+# Реальные файлы и папки — как есть
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [END]
+
+# Короткие маршруты
+RewriteRule ^health/?$ health.php [QSA,END]
+
+RewriteRule ^projects/?$ projects.php [QSA,END]
+RewriteRule ^projects/([a-z0-9-]+)/?$ project.php?slug=$1 [QSA,END]
+
+RewriteRule ^products/?$ products.php [QSA,END]
+RewriteRule ^products/([a-z0-9-]+)/?$ product.php?slug=$1 [QSA,END]
+
+RewriteRule ^leads/?$ leads.php [QSA,END]
+
+RewriteRule ^image/(project_images|product_images|collection_images)/([0-9]+)/?$ image.php?table=$1&id=$2 [QSA,END]
