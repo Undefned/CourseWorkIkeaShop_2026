@@ -11,21 +11,26 @@
 </head>
 <body class="tpl-b page-portfolio">
 
-  <header class="site-header">
-    <div class="container">
+<header class="site-header">
+  <div class="container">
+    <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="logo">TSOGZ</div>
+    <div class="mobile-menu" id="mobile-menu">
       <div class="header-meta">
         <span>Санкт-Петербург</span>
         <span>+7 (495) 000–00–00</span>
       </div>
-      <a class="logo" href="index.html">TSOGZ</a>
       <nav class="header-nav">
-        <a class="active" href="portfolio.html">Портфолио</a>
+        <a href="portfolio.html">Портфолио</a>
         <a href="services.html">Услуги</a>
         <a href="showroom.html">Шоурум</a>
         <a href="contacts.html">Контакты</a>
       </nav>
     </div>
-  </header>
+  </div>
+</header>
 
   <section class="page-intro">
     <div class="container">
@@ -110,5 +115,6 @@
 
   <script src="js/api.js"></script>
   <script src="js/portfolio.js"></script>
+  <script src="js/mobile-menu.js"></script>
 </body>
 </html>

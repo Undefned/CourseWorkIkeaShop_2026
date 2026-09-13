@@ -11,13 +11,17 @@
 </head>
 <body class="tpl-b page-home hero-page">
 
-  <header class="site-header">
-    <div class="container">
+<header class="site-header">
+  <div class="container">
+    <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="logo">TSOGZ</div>
+    <div class="mobile-menu" id="mobile-menu">
       <div class="header-meta">
         <span>Санкт-Петербург</span>
         <span>+7 (495) 000–00–00</span>
       </div>
-      <div class="logo">TSOGZ</div>
       <nav class="header-nav">
         <a href="portfolio.html">Портфолио</a>
         <a href="services.html">Услуги</a>
@@ -25,7 +29,8 @@
         <a href="contacts.html">Контакты</a>
       </nav>
     </div>
-  </header>
+  </div>
+</header>
 
   <section class="hero">
     <div class="hero-inner">
@@ -241,6 +246,8 @@
       </div>
     </div>
   </footer>
+
+<script src="js/mobile-menu.js"></script>
 
 </body>
 </html>

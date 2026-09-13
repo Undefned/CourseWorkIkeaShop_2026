@@ -12,17 +12,22 @@
 
 <header class="site-header">
   <div class="header-inner">
-    <div class="header-meta">
-      <span>Санкт-Петербург</span>
-      <span>+7 (495) 000–00–00</span>
-    </div>
+    <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
     <a href="index.html" class="logo">TSOGZ</a>
-    <nav class="main-nav" aria-label="Основная навигация">
-      <a href="portfolio.html">Портфолио</a>
-      <a href="services.html">Услуги</a>
-      <a href="showroom.html">Шоурум</a>
-      <a href="contacts.html">Контакты</a>
-    </nav>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="header-meta">
+        <span>Санкт-Петербург</span>
+        <span>+7 (495) 000–00–00</span>
+      </div>
+      <nav class="main-nav" aria-label="Основная навигация">
+        <a href="portfolio.html">Портфолио</a>
+        <a href="services.html">Услуги</a>
+        <a href="showroom.html">Шоурум</a>
+        <a href="contacts.html">Контакты</a>
+      </nav>
+    </div>
   </div>
 </header>
 
@@ -123,6 +128,8 @@
     <p class="footer-privacy"><a href="privacy.html">Политика конфиденциальности</a></p>
   </div>
 </footer>
+
+<script src="js/mobile-menu.js"></script>
 
 </body>
 </html>

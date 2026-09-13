@@ -1,51 +1,3 @@
-/* ============================================================
-   TSOGZ — unified stylesheet
-   ------------------------------------------------------------
-   HOW THIS FILE IS ORGANISED
-   This file merges two page "families" that were originally
-   built separately, so nothing about how any page looks has
-   changed by combining them:
-
-   FAMILY A (already used this external stylesheet):
-     request.html, showroom.html, about.html, contacts.html,
-     privacy.html, product-yoga.html
-   -> kept 100% verbatim below, untouched.
-
-   FAMILY B (previously had their own inline <style> blocks,
-   now wired to this file instead):
-     index.html, project.html, services.html, delivery.html,
-     portfolio.html
-   -> scoped under body.tpl-b so nothing here can collide with
-      Family A's rules of the same name (.btn, .logo, .eyebrow,
-      .container, etc. all exist in both families with slightly
-      different values).
-
-   Within Family B, the header/footer/buttons/CTA banner are
-   genuinely identical across all 5 pages and are written once
-   (the header additionally has a "hero" variant for the two
-   pages whose header floats over a full-bleed photo). Anything
-   that is specific to a single page (hero copy, pricing table,
-   gallery grid, etc.) — including that page's own @media rules
-   — lives under that page's own body class (.page-home,
-   .page-project, .page-services, .page-delivery,
-   .page-portfolio), so editing one page's layout or its mobile
-   behaviour can never affect another page.
-
-   <body> tags now carry these classes:
-     index.html        -> tpl-b page-home
-     project.html       -> tpl-b page-project
-     services.html       -> tpl-b page-services
-     delivery.html       -> tpl-b page-delivery
-     portfolio.html       -> tpl-b page-portfolio
-     request.html         -> (unchanged)
-     showroom.html         -> (unchanged)
-     about.html           -> (unchanged)
-     contacts.html         -> (unchanged)
-     privacy.html          -> (unchanged)
-     product-yoga.html      -> (unchanged)
-   ============================================================ */
-
-/* ---------- Universal reset (identical intent in both families) ---------- */
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 
@@ -53,20 +5,6 @@ html { scroll-behavior: smooth; }
   * { animation: none !important; transition: none !important; }
 }
 
-/* ============================================================
-   FAMILY B — shared tokens, base reset, header, footer,
-   buttons, CTA banner and breadcrumb
-   (index.html, project.html, services.html, delivery.html,
-   portfolio.html)
-   ============================================================ */
-
-/* ---- tokens ----
-   Scoped to body.tpl-b so they never change Family A's
-   --border-subtle / --text-muted values (Family A uses a
-   different alpha for both). Everything else Family B needs
-   (--bg-soft, --bg-dark, --text-primary, --text-inverse,
-   --brand-accent) already matches Family A's :root exactly,
-   so it's reused from there rather than duplicated. */
 body.tpl-b {
   --bg-canvas: #ffffff;
   --serif: 'Cormorant', serif;
@@ -75,10 +13,6 @@ body.tpl-b {
   --border-subtle: rgba(44, 46, 45, .12);
 }
 
-/* ---- base reset ----
-   Also re-affirms a few properties that Family A's own base
-   reset sets globally (line-height, p margin, heading font),
-   so those never leak through onto a Family B page. */
 body.tpl-b {
   margin: 0;
   background: var(--bg-canvas);
@@ -93,26 +27,28 @@ body.tpl-b h1, body.tpl-b h2, body.tpl-b h3 { font-family: var(--sans); }
 body.tpl-b :focus-visible { outline: revert; outline-offset: revert; }
 body.tpl-b a { color: inherit; text-decoration: none; }
 body.tpl-b img { display: block; width: 100%; height: 100%; object-fit: cover; }
-/* .container is byte-identical to Family A's .container, so it is
-   reused as-is; only the mobile padding tweak is Family-B specific
-   and lives inside each page's own @media block below. */
 
-/* ---- header ----
-   Two variants: a static in-flow header (services/delivery/
-   portfolio) and a header that floats over a full-bleed photo
-   with light text (home/project, tagged .hero-page). */
 body.tpl-b .site-header { padding: 24px 0; }
+body.tpl-b:not(.hero-page) .site-header { border-bottom: 1px solid var(--border-subtle); }
 body.tpl-b.hero-page .site-header { position: absolute; top: 0; left: 0; right: 0; z-index: 10; padding: 24px 0; }
-body.tpl-b .site-header .container { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-body.tpl-b .header-meta { display: flex; align-items: center; gap: 24px; font-size: 14px; }
+body.tpl-b .site-header .container {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+}
+body.tpl-b .header-meta { grid-column: 1; justify-self: start; display: flex; align-items: center; gap: 24px; font-size: 14px; }
 body.tpl-b.hero-page .header-meta { color: var(--text-inverse); }
-body.tpl-b .logo { font-family: var(--serif); font-size: 32px; font-weight: 500; }
+body.tpl-b .logo { grid-column: 2; justify-self: center; font-family: var(--serif); font-size: 32px; font-weight: 500; }
 body.tpl-b.hero-page .logo { color: var(--text-inverse); }
-body.tpl-b .header-nav { display: flex; align-items: center; gap: 24px; font-size: 14px; }
+body.tpl-b .header-nav { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 24px; font-size: 14px; }
 body.tpl-b.hero-page .header-nav { color: var(--text-inverse); }
 body.tpl-b .header-nav a.active { opacity: .5; }
+body.tpl-b .nav-toggle { display: none; grid-column: 1; justify-self: start; }
+body.tpl-b.hero-page .nav-toggle span { background: var(--text-inverse); }
+body.tpl-b .mobile-menu { display: contents; }
+body.tpl-b:not(.hero-page) .site-header { position: relative; }
 
-/* ---- footer (identical across all 5 pages) ---- */
 body.tpl-b footer { background: var(--bg-dark); color: var(--text-inverse); padding: 48px 0; }
 body.tpl-b .footer-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 40px; padding-bottom: 32px; }
 body.tpl-b .footer-brand { display: flex; flex-direction: column; gap: 8px; }
@@ -124,8 +60,6 @@ body.tpl-b .footer-col .col-title { color: var(--brand-accent); }
 body.tpl-b .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.12); font-size: 12px; }
 body.tpl-b .footer-bottom a { font-size: 14px; }
 
-/* ---- buttons (shared base; a couple of pages add one extra
-   declaration on top, see their own page section) ---- */
 body.tpl-b .btn { display: inline-flex; align-items: center; justify-content: center; padding: 16px 32px; border-radius: 4px; font-size: 14px; font-weight: 500; cursor: pointer; transition: opacity .15s ease; }
 body.tpl-b .btn:hover { opacity: .7; }
 body.page-home .btn:hover { opacity: .8; }
@@ -133,11 +67,6 @@ body.tpl-b .btn-outline-light { border: 1px solid var(--text-inverse); color: va
 body.tpl-b .btn-outline-dark { border: 1px solid var(--text-primary); color: var(--text-primary); background: transparent; }
 body.tpl-b .btn-fill { background: var(--brand-accent); color: var(--text-primary); border: 1px solid var(--brand-accent); }
 
-/* ---- CTA banner ----
-   Home relies on a page-wide `section{padding:96px 0}` rule
-   (see its own section) so it doesn't need the padding here;
-   the other three pages don't have that generic rule and need
-   it declared directly. */
 body.tpl-b .cta { background: var(--bg-dark); color: var(--text-inverse); text-align: center; }
 body.page-project .cta, body.page-services .cta, body.page-portfolio .cta { padding: 96px 0; }
 body.tpl-b .cta-inner { display: flex; flex-direction: column; align-items: center; gap: 24px; }
@@ -145,9 +74,6 @@ body.tpl-b .cta h2 { margin: 0; font-family: var(--serif); font-weight: 500; fon
 body.tpl-b .cta p { margin: 0; max-width: 560px; font-size: clamp(16px, 2vw, 24px); line-height: 1.3; opacity: .72; }
 body.tpl-b .cta-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
 
-/* ---- breadcrumb (project/services use one text style over a
-   dark hero; delivery/portfolio use another over a light one —
-   both share the same layout) ---- */
 body.tpl-b .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; }
 body.page-project .breadcrumb, body.page-services .breadcrumb { color: var(--text-inverse); }
 body.page-portfolio .breadcrumb { margin-bottom: 12px; }
@@ -155,13 +81,9 @@ body.tpl-b .breadcrumb .dim { opacity: .6; }
 body.tpl-b .breadcrumb .muted { color: var(--brand-accent); }
 body.tpl-b .breadcrumb .current { color: var(--text-primary); }
 
-/* ---- small shared bits reused by more than one Family-B page ---- */
 body.tpl-b .eyebrow { font-size: 14px; font-weight: 500; }
 body.page-home .eyebrow, body.page-project .eyebrow, body.page-services .eyebrow { color: var(--brand-accent); }
 
-/* "Избранный проект" card: home and portfolio share almost all
-   of this, differing only in the margin-right / meta / desc
-   details noted per page below. */
 body.tpl-b .featured-project { position: relative; border-radius: 4px; overflow: hidden; min-height: 520px; display: flex; align-items: center; }
 body.tpl-b .featured-project img { position: absolute; inset: 0; }
 body.page-portfolio .featured-project { margin-bottom: 64px; }
@@ -174,9 +96,6 @@ body.page-home .featured-card .meta { font-size: 14px; opacity: .56; }
 body.page-home .featured-card .desc { opacity: .64; }
 body.page-portfolio .featured-card .meta { font-size: 12px; }
 
-/* "Портфолио"/"Доставка" page intro: same purpose, different
-   layout on each page, so only the shared heading typography is
-   pulled out here. */
 body.tpl-b .page-intro h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(32px, 5vw, 48px); }
 body.page-delivery .page-intro h1 { margin: 12px 0 0; }
 body.page-portfolio .page-intro h1 { margin: 0 0 12px; }
@@ -184,13 +103,38 @@ body.tpl-b .page-intro p { margin: 0; max-width: 640px; font-size: 16px; line-he
 
 @media (max-width: 600px) {
   body.tpl-b .container { padding: 0 20px; }
-  body.tpl-b .header-nav { display: none; }
-  body.tpl-b .header-meta { display: none; }
+  body.tpl-b .nav-toggle { display: inline-flex; }
+  body.tpl-b .mobile-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    z-index: 20;
+  }
+  body.tpl-b .mobile-menu.is-open { display: flex; }
+  body.tpl-b .mobile-menu .header-meta,
+  body.tpl-b .mobile-menu .header-nav {
+    grid-column: auto;
+    justify-self: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    color: var(--text-primary);
+  }
   body.tpl-b .footer-top { flex-direction: column; }
+  body.tpl-b .cta-buttons { flex-direction: column; width: 100%; }
+  body.tpl-b .cta-buttons .btn { width: 100%; }
+  body.page-delivery .help-buttons { flex-direction: column; width: 100%; }
+  body.page-delivery .help-buttons .btn { width: 100%; }
 }
 
-/* ---------- Home / index.html (page-home) ---------- */
-.page-home .nav-toggle { display:none; }
 .page-home .hero { position:relative; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:140px 40px 96px; background:
       linear-gradient(rgba(0,0,0,.4), rgba(0,0,0,.4)),
       url(/Assets/Hero.jpg) center/cover no-repeat; }
@@ -230,7 +174,6 @@ body.tpl-b .page-intro p { margin: 0; max-width: 640px; font-size: 16px; line-he
 .page-home .faq-item h3 { margin:0; font-weight:400; font-size:24px; }
 .page-home .faq-item p { margin:0; font-size:16px; line-height:1.6; opacity:.56; }
 @media (max-width: 960px) {
-  .page-home .header-nav { display:none; }
   .page-home .gallery { grid-template-columns:1fr; }
   .page-home .project-grid { grid-template-columns:1fr; }
   .page-home .process { grid-template-columns:repeat(2, 1fr); }
@@ -238,17 +181,13 @@ body.tpl-b .page-intro p { margin: 0; max-width: 640px; font-size: 16px; line-he
   .page-home .featured-card { margin:0 5%; }
 }
 @media (max-width: 600px) {
-  .page-home .container { padding:0 20px; }
   .page-home section { padding:64px 0; }
   .page-home .hero { padding:120px 20px 64px; }
-  .page-home .header-meta { display:none; }
   .page-home .process { grid-template-columns:1fr; }
   .page-home .team { grid-template-columns:1fr; }
-  .page-home .footer-top { flex-direction:column; }
   .page-home .footer-columns { gap:32px; }
 }
 
-/* ---------- Project detail / project.html (page-project) ---------- */
 .page-project .project-hero { position:relative; min-height:720px; display:flex; align-items:center; padding:140px 48px 64px; background:
       linear-gradient(rgba(0,0,0,.4), rgba(0,0,0,.4)),
       url('https://placehold.co/1440x720') center/cover no-repeat; }
@@ -284,7 +223,7 @@ body.tpl-b .page-intro p { margin: 0; max-width: 640px; font-size: 16px; line-he
 @media (max-width:960px) {
   .page-project .about-project { padding:32px 24px 96px; }
   .page-project .about-img-main { width:100%; }
-  .page-project .about-img-secondary { position:static; width:60%; margin-top:16px; }
+  .page-project .about-img-secondary { position:static; width:100%; margin-top:16px; }
   .page-project .about-card { margin:24px 0 0; max-width:100%; }
   .page-project .related-grid { grid-template-columns:1fr; }
   .page-project .gallery-pair { grid-template-columns:1fr; }
@@ -294,8 +233,6 @@ body.tpl-b .page-intro p { margin: 0; max-width: 640px; font-size: 16px; line-he
   .page-project .project-hero { padding:120px 20px 48px; }
 }
 
-/* ---------- Services / services.html (page-services) ---------- */
-/* .btn gets one extra declaration here on top of the shared base above */
 .page-services .page-hero { padding:48px 48px; display:flex; flex-direction:column; gap:12px; background:
       linear-gradient(rgba(0,0,0,.4), rgba(0,0,0,.4)),
       url(/Assets/Intro.png) center/cover no-repeat; }
@@ -315,8 +252,8 @@ body.tpl-b .page-intro p { margin: 0; max-width: 640px; font-size: 16px; line-he
 .page-services .pricing-cta { flex:0 0 180px; display:flex; align-items:flex-end; justify-content:flex-end; }
 .page-services .showroom-promo { padding:96px 80px; }
 .page-services .promo-wrap { position:relative; max-width:1280px; margin:0 auto; }
-.page-services .promo-img-main { width:64%; height:520px; border-radius:2px; overflow:hidden; margin-top:40px; }
-.page-services .promo-img-secondary { position:absolute; width:33%; max-width:380px; height:300px; right:0; top:0; border-radius:2px; overflow:hidden; }
+.page-services .promo-img-main { position:absolute; width:33%; max-width:380px; height:300px; right:0; top:0; border-radius:2px; overflow:hidden; }
+.page-services .promo-img-secondary { width:64%; height:520px; border-radius:2px; overflow:hidden; margin-top:40px; }
 .page-services .promo-card { position:relative; z-index:2; max-width:400px; margin-left:auto; margin-top:-200px; margin-right:4%; background:var(--bg-canvas); box-shadow:0 16px 32px rgba(0,0,0,.1); padding:40px; display:flex; flex-direction:column; gap:16px; }
 .page-services .promo-card h3 { margin:0; font-family:var(--serif); font-weight:500; font-size:32px; }
 .page-services .promo-card p { margin:0; font-size:16px; line-height:1.6; color:var(--text-muted); max-width:320px; }
@@ -324,17 +261,18 @@ body.tpl-b .page-intro p { margin: 0; max-width: 640px; font-size: 16px; line-he
 @media (max-width:960px) {
   .page-services .pricing-cta { justify-content:flex-start; }
   .page-services .showroom-promo { padding:64px 24px; }
-  .page-services .promo-img-main { width:100%; }
-  .page-services .promo-img-secondary { position:static; width:60%; margin-top:16px; }
+  .page-services .promo-img-main { position:static; width:100%; margin-top:16px; }
+  .page-services .promo-img-secondary { width:100%; }
   .page-services .promo-card { margin:24px 0 0; max-width:100%; }
 }
 @media (max-width:600px) {
   .page-services .pricing { padding:24px 20px 64px; }
   .page-services .page-hero { padding:32px 20px; }
+  .page-services .promo-img-main,
+  .page-services .promo-img-secondary { width:100%; max-width:none; }
 }
 body.page-services .btn { white-space: nowrap; }
 
-/* ---------- Delivery / delivery.html (page-delivery) ---------- */
 .page-delivery .block { padding:64px 40px 96px 48px; }
 .page-delivery .block-inner { max-width:1200px; }
 .page-delivery .block h2 { margin:0 0 32px; font-family:var(--serif); font-weight:500; font-size:32px; }
@@ -357,9 +295,7 @@ body.page-services .btn { white-space: nowrap; }
   .page-delivery .info-grid { gap:24px; }
 }
 
-/* ---------- Portfolio / portfolio.html (page-portfolio) ---------- */
-/* .btn gets one extra declaration here on top of the shared base above */
-.page-portfolio .filters { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; padding-bottom:48px; }
+.page-portfolio .filters { display:flex; justify-content:flex-start; flex-wrap:wrap; gap:8px; padding-bottom:48px; }
 .page-portfolio .filter-btn { padding:16px 32px; border-radius:4px; font-size:14px; font-weight:500; cursor:pointer; border:1px solid var(--text-primary); background:transparent; color:var(--text-primary); }
 .page-portfolio .filter-btn.active { background:var(--bg-dark); border-color:var(--bg-dark); color:var(--text-inverse); }
 .page-portfolio .project-list { display:flex; flex-direction:column; gap:32px; padding-bottom:32px; }
@@ -375,21 +311,12 @@ body.page-services .btn { white-space: nowrap; }
   .page-portfolio .project-row { grid-template-columns:1fr; }
   .page-portfolio .featured-card { margin:0 5%; }
 }
+@media (max-width:600px) {
+  .page-portfolio .filter-btn { padding:12px 20px; }
+}
 body.page-portfolio .btn { align-self: flex-start; }
 body.page-portfolio .page-intro { padding: 48px 0; }
 body.page-delivery .page-intro { background: var(--bg-soft); padding: 48px 40px 48px 48px; display: flex; flex-direction: column; gap: 12px; }
-
-/* ============================================================
-   FAMILY A — request.html, showroom.html, about.html,
-   contacts.html, privacy.html, product-yoga.html
-   (verbatim copy of the original shared styles.css — nothing
-   below this line has been changed)
-   ============================================================ */
-
-/* ============================================================
-   TSOGZ — shared styles
-   Fonts: Cormorant (display) / Montserrat (UI + body)
-   ============================================================ */
 
 :root {
   --text-primary: #2C2E2D;
@@ -451,8 +378,6 @@ button { font-family: var(--font-body); cursor: pointer; }
   * { animation: none !important; transition: none !important; }
 }
 
-/* ---------- Header ---------- */
-
 .site-header {
   border-bottom: 1px solid var(--border-subtle);
 }
@@ -461,23 +386,26 @@ button { font-family: var(--font-body); cursor: pointer; }
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 24px 40px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: 24px;
 }
 
 .header-meta {
+  grid-column: 1;
+  justify-self: start;
   display: flex;
   align-items: center;
   gap: 24px;
   font-size: 14px;
-  flex: 1;
 }
 
 .header-meta a { white-space: nowrap; }
 
 .logo {
+  grid-column: 2;
+  justify-self: center;
   font-family: var(--font-display);
   font-size: 32px;
   font-weight: 500;
@@ -485,16 +413,37 @@ button { font-family: var(--font-body); cursor: pointer; }
 }
 
 .main-nav {
+  grid-column: 3;
+  justify-self: end;
   display: flex;
-  justify-content: flex-end;
   gap: 24px;
-  flex: 1;
   font-size: 14px;
 }
 
 .main-nav a:hover { color: var(--brand-accent); }
 
-/* ---------- Page hero ---------- */
+.nav-toggle {
+  display: none;
+  grid-column: 1;
+  justify-self: start;
+  width: 28px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.nav-toggle span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--text-primary);
+  border-radius: 1px;
+}
+.mobile-menu { display: contents; }
+.site-header { position: relative; }
 
 .page-hero {
   padding: 48px 40px 64px 48px;
@@ -555,8 +504,6 @@ button { font-family: var(--font-body); cursor: pointer; }
   max-width: 640px;
 }
 
-/* ---------- Buttons ---------- */
-
 .btn {
   display: inline-flex;
   align-items: center;
@@ -599,8 +546,6 @@ button { font-family: var(--font-body); cursor: pointer; }
   gap: 16px;
   flex-wrap: wrap;
 }
-
-/* ---------- Contacts page ---------- */
 
 .contacts {
   padding: 96px 40px;
@@ -681,8 +626,6 @@ button { font-family: var(--font-body); cursor: pointer; }
   color: var(--text-muted);
   font-size: 16px;
 }
-
-/* ---------- Forms ---------- */
 
 .field {
   display: flex;
@@ -765,8 +708,6 @@ button { font-family: var(--font-body); cursor: pointer; }
   color: var(--text-inverse);
 }
 
-/* ---------- Get-in-touch band (contacts page) ---------- */
-
 .contact-band {
   background: var(--bg-soft);
   padding: 96px 40px;
@@ -800,8 +741,6 @@ button { font-family: var(--font-body); cursor: pointer; }
   gap: 24px;
 }
 
-/* ---------- CTA banner ---------- */
-
 .cta-banner {
   background: var(--bg-dark);
   color: var(--text-inverse);
@@ -821,8 +760,6 @@ button { font-family: var(--font-body); cursor: pointer; }
   line-height: 1.25;
   max-width: 640px;
 }
-
-/* ---------- Footer ---------- */
 
 .site-footer {
   background: var(--bg-dark);
@@ -889,8 +826,6 @@ button { font-family: var(--font-body); cursor: pointer; }
 
 .footer-privacy a:hover { color: var(--brand-accent); }
 
-/* ---------- Request page: process + form ---------- */
-
 .request-layout {
   background: var(--bg-soft);
   padding: 64px 40px 96px;
@@ -945,8 +880,6 @@ button { font-family: var(--font-body); cursor: pointer; }
 
 .request-form-card h2 { font-size: 32px; }
 
-/* ---------- Privacy policy ---------- */
-
 .policy {
   max-width: 860px;
   margin: 0 auto;
@@ -969,19 +902,17 @@ button { font-family: var(--font-body); cursor: pointer; }
   line-height: 1.6;
 }
 
-/* ---------- Filter chips (showroom) ---------- */
-
 .filter-bar {
   padding: 0 40px 48px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .filter-row {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .filter-chip {
@@ -1000,8 +931,6 @@ button { font-family: var(--font-body); cursor: pointer; }
   border-color: var(--bg-dark);
   color: var(--text-inverse);
 }
-
-/* ---------- Featured collection ---------- */
 
 .featured-collection {
   padding: 0 40px 64px;
@@ -1050,8 +979,6 @@ button { font-family: var(--font-body); cursor: pointer; }
   max-width: 320px;
 }
 
-/* ---------- Product grid ---------- */
-
 .product-section {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -1091,8 +1018,6 @@ button { font-family: var(--font-body); cursor: pointer; }
   justify-content: center;
 }
 
-/* ---------- Partner band (showroom) ---------- */
-
 .partner-band {
   background: var(--bg-soft);
   padding: 64px 40px;
@@ -1118,8 +1043,6 @@ button { font-family: var(--font-body); cursor: pointer; }
   font-size: 16px;
   line-height: 1.6;
 }
-
-/* ---------- Product detail page ---------- */
 
 .product-detail {
   max-width: var(--max-width);
@@ -1238,8 +1161,6 @@ button { font-family: var(--font-body); cursor: pointer; }
 .info-band--soft { background: var(--bg-soft); }
 .info-band--white { background: #fff; }
 
-/* ---------- About page ---------- */
-
 .about-section {
   padding: 64px 48px 96px;
   display: flex;
@@ -1294,11 +1215,7 @@ button { font-family: var(--font-body); cursor: pointer; }
 
 .geo-item h3 { font-size: 24px; }
 
-/* ---------- Responsive ---------- */
-
 @media (max-width: 900px) {
-  .header-inner { flex-wrap: wrap; row-gap: 12px; }
-  .main-nav { justify-content: flex-start; flex-wrap: wrap; }
   .contacts,
   .request-layout {
     flex-direction: column;
@@ -1337,4 +1254,35 @@ button { font-family: var(--font-body); cursor: pointer; }
   .info-band,
   .related-products,
   .product-detail { padding-left: 20px; padding-right: 20px; }
+  .nav-toggle { display: inline-flex; }
+  .mobile-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    z-index: 20;
+  }
+  .mobile-menu.is-open { display: flex; }
+  .mobile-menu .header-meta,
+  .mobile-menu .main-nav {
+    grid-column: auto;
+    justify-self: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .filter-bar { padding-left: 20px; padding-right: 20px; }
+  .filter-chip { padding: 12px 20px; }
+  .btn-row { flex-direction: column; width: 100%; }
+  .btn-row .btn { width: 100%; }
+  .featured-card .btn { width: 100%; }
+  .contact-band form button[type="submit"] { width: 100%; }
+  .request-form-card form button[type="submit"] { width: 100%; }
 }
