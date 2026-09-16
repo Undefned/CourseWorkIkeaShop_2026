@@ -21,6 +21,30 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
     exit;
 }
 
+/**
+ * Off by default. Turn on with either:
+ *   - an APP_DEBUG=1 environment variable (docker-compose.yml), or
+ *   - a top-level 'debug' => true in config.local.php
+ * to see the *real* exception (class, message, file:line) inside the
+ * JSON error response instead of the generic 500 message — the fastest
+ * way to see exactly which table/column a query is failing on when
+ * something works locally but not on the real deployment.
+ * Turn this back off once the real error is found; it can leak schema
+ * details.
+ */
+function appDebugEnabled(): bool
+{
+    if (getenv('APP_DEBUG') === '1') {
+        return true;
+    }
+    $configPath = __DIR__ . '/../config.local.php';
+    if (is_file($configPath)) {
+        $config = require $configPath;
+        return is_array($config) && ($config['debug'] ?? false) === true;
+    }
+    return false;
+}
+
 set_exception_handler(static function (Throwable $exception): void {
     if ($exception instanceof ApiException) {
         respond([
@@ -32,7 +56,14 @@ set_exception_handler(static function (Throwable $exception): void {
     }
 
     error_log((string) $exception);
-    respond([
-        'error' => ['message' => 'Внутренняя ошибка сервера. Попробуйте позже.', 'fields' => (object) []],
-    ], 500);
+
+    $error = ['message' => 'Внутренняя ошибка сервера. Попробуйте позже.', 'fields' => (object) []];
+    if (appDebugEnabled()) {
+        $error['debug'] = [
+            'exception' => get_class($exception),
+            'message' => $exception->getMessage(),
+            'at' => $exception->getFile() . ':' . $exception->getLine(),
+        ];
+    }
+    respond(['error' => $error], 500);
 });

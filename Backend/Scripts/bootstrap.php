@@ -18,27 +18,84 @@ function fail(int $status, string $message, array $fields = []): never
 
 set_exception_handler(function (Throwable $exception): void {
     error_log((string) $exception);
-    fail(500, 'Внутренняя ошибка сервера. Попробуйте позже.');
+    $debug = getenv('APP_DEBUG') === '1';
+    $payload = ['message' => 'Внутренняя ошибка сервера. Попробуйте позже.', 'fields' => (object) []];
+    if ($debug) {
+        $payload['debug'] = [
+            'exception' => get_class($exception),
+            'message'   => $exception->getMessage(),
+            'at'        => $exception->getFile() . ':' . $exception->getLine(),
+        ];
+    }
+    fail(500, $payload['message'], (array) ($payload['debug'] ?? []));
 });
+
+/**
+ * Ищем config.local.php там же, где его ищет lib/database.php,
+ * чтобы на Helios обе точки входа работали одинаково.
+ */
+function appConfig(): array
+{
+    static $config = null;
+    if ($config !== null) {
+        return $config;
+    }
+
+    $candidates = [
+        dirname(__DIR__, 3) . '/tsogz_private/config.local.php',
+        dirname(__DIR__, 2) . '/tsogz_private/config.local.php',
+        dirname(__DIR__) . '/Api/config.local.php',
+        dirname(__DIR__) . '/config.local.php',
+    ];
+
+    foreach ($candidates as $path) {
+        if (is_file($path)) {
+            $loaded = require $path;
+            if (is_array($loaded)) {
+                return $config = $loaded;
+            }
+        }
+    }
+    return $config = [];
+}
 
 function db(): PDO
 {
-    static $connection;
-    if (!$connection) {
-        $host = getenv('PGHOST') ?: 'db';
-        $port = getenv('PGPORT') ?: '5432';
-        $database = getenv('PGDATABASE');
-        $user = getenv('PGUSER');
-        $password = getenv('PGPASSWORD');
-        if (!$database || !$user || $password === false) {
-            throw new RuntimeException('Database environment is not configured');
-        }
-        $connection = new PDO("pgsql:host=$host;port=$port;dbname=$database;connect_timeout=5", $user, $password, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
-        ]);
+    static $connection = null;
+    if ($connection instanceof PDO) {
+        return $connection;
     }
+
+    $local = appConfig();
+    $dbConfig = is_array($local['db'] ?? null) ? $local['db'] : [];
+
+    $host     = (string)($dbConfig['host']     ?? getenv('PGHOST')     ?: 'db');
+    $port     = (string)($dbConfig['port']     ?? getenv('PGPORT')     ?: '5432');
+    $database = (string)($dbConfig['name']     ?? getenv('PGDATABASE') ?: '');
+    $user     = (string)($dbConfig['user']     ?? getenv('PGUSER')     ?: '');
+    $password = (string)($dbConfig['password'] ?? getenv('PGPASSWORD') ?: '');
+    $schema   = (string)($dbConfig['schema']   ?? getenv('PGSCHEMA')   ?: '');
+
+    if ($database === '' || $user === '') {
+        throw new RuntimeException('Database environment is not configured');
+    }
+
+    $connection = new PDO(
+        "pgsql:host=$host;port=$port;dbname=$database;connect_timeout=5",
+        $user,
+        $password,
+        [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+        ]
+    );
+
+    if ($schema !== '') {
+        $quoted = '"' . str_replace('"', '""', $schema) . '"';
+        $connection->exec('SET search_path TO ' . $quoted . ', public');
+    }
+
     return $connection;
 }
 
@@ -91,12 +148,6 @@ function requestBody(): array
     fail(415, 'Используйте application/json или application/x-www-form-urlencoded.');
 }
 
-/**
- * Serves a single BYTEA image row as a raw HTTP response (not JSON).
- * $table is restricted to a fixed allow-list so this can never be used
- * to read arbitrary tables — see the route match in Api/index.php, which
- * only ever passes one of these three values.
- */
 function serveImage(string $table, int $id): never
 {
     $allowed = ['project_images', 'product_images', 'collection_images'];
@@ -124,8 +175,7 @@ function serveImage(string $table, int $id): never
     header('ETag: ' . $etag);
     header('Last-Modified: ' . $lastModified);
 
-    $clientEtag = $_SERVER['HTTP_IF_NONE_MATCH'] ?? '';
-    if ($clientEtag === $etag) {
+    if (($_SERVER['HTTP_IF_NONE_MATCH'] ?? '') === $etag) {
         http_response_code(304);
         exit;
     }

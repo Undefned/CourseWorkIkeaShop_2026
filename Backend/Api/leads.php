@@ -6,14 +6,6 @@ require __DIR__ . '/lib/bootstrap.php';
 
 requireMethod('POST');
 
-/**
- * Consent: neither form has a real checkbox — the text under the submit
- * button ("Нажимая кнопку, вы соглашаетесь...") implies consent-by-
- * submission, so consent_given is recorded as TRUE below on that basis.
- * If a real checkbox is added later, read it here instead and reject the
- * request when it's unchecked.
- */
-
 $body = requestBody();
 
 $formType = is_string($body['form_type'] ?? null) ? trim($body['form_type']) : '';
@@ -42,14 +34,12 @@ if (!preg_match('/^[+0-9()\s-]+$/', $data['phone']) || strlen($digits) < 10 || s
     $errors['phone'] = 'Укажите телефон: от 10 до 15 цифр.';
 }
 
-// Email only exists on the measurement-request form.
 if (!$isMeasurement) {
     $data['email'] = '';
-} elseif ($data['email'] !== '' && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+} elseif ($data['email'] !== '' && !isValidEmail($data['email'])) {
     $errors['email'] = 'Укажите корректный email.';
 }
 
-// Object type (chip group) only exists on the measurement-request form.
 $projectTypeId = null;
 if ($isMeasurement) {
     $typeSlug = is_string($body['project_type'] ?? null) ? trim($body['project_type']) : '';
@@ -63,7 +53,6 @@ if ($isMeasurement) {
     }
 }
 
-// Area only exists on the measurement-request form.
 $area = $isMeasurement ? ($body['area'] ?? null) : null;
 if ($area === '') {
     $area = null;

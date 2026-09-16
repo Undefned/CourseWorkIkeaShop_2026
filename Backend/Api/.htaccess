@@ -1,4 +1,3 @@
-# Backend/Api/.htaccess
 RewriteEngine On
 
 # Никогда не отдавать конфиги и lib/* напрямую
@@ -22,5 +21,3 @@ RewriteRule ^products/?$ products.php [QSA,END]
 RewriteRule ^products/([a-z0-9-]+)/?$ product.php?slug=$1 [QSA,END]
 
 RewriteRule ^leads/?$ leads.php [QSA,END]
-
-RewriteRule ^image/(project_images|product_images|collection_images)/([0-9]+)/?$ image.php?table=$1&id=$2 [QSA,END]

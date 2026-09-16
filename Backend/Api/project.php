@@ -8,8 +8,6 @@ requireMethod('GET');
 
 $slug = requiredQuerySlug();
 
-// NOTE: `projects` has no is_active column in schema.sql (unlike
-// `products`), so there is nothing to filter on here.
 $item = rows('SELECT * FROM projects WHERE slug = :slug', ['slug' => $slug]);
 if (!$item) {
     fail(404, 'Проект не найден.');
@@ -24,11 +22,11 @@ $item['type'] = $type;
 unset($item['project_type_id']);
 
 $item['images'] = rows(
-    'SELECT id, alt, role FROM project_images WHERE project_id = :id ORDER BY sort_order, id',
+    'SELECT id, path, alt, role FROM project_images WHERE project_id = :id ORDER BY sort_order, id',
     ['id' => $item['id']]
 );
 foreach ($item['images'] as &$img) {
-    $img['url'] = '/api/image/project_images/' . $img['id'];
+    $img['url'] = $img['path'];
 }
 unset($img);
 
@@ -40,10 +38,11 @@ $item['related'] = rows(
 );
 foreach ($item['related'] as &$rel) {
     $cover = rows(
-        "SELECT id FROM project_images WHERE project_id = :id ORDER BY (role = 'cover') DESC, sort_order, id LIMIT 1",
+        "SELECT path FROM project_images WHERE project_id = :id
+         ORDER BY (role = 'cover') DESC, sort_order, id LIMIT 1",
         ['id' => $rel['id']]
     );
-    $rel['cover_url'] = $cover ? '/api/image/project_images/' . $cover[0]['id'] : null;
+    $rel['cover_url'] = $cover ? $cover[0]['path'] : null;
 }
 unset($rel);
 

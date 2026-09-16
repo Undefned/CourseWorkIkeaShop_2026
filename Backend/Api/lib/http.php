@@ -79,9 +79,29 @@ function queryText(string $key, string $default = ''): string
     return trim($value);
 }
 
+/**
+ * Без filter_var — на se.ifmo.ru расширение filter отключено.
+ * Проверяем, что строка состоит только из цифр (с опциональным ведущим минусом,
+ * который всё равно отсекается проверкой $value < 1).
+ */
+function toIntOrFalse(string $raw): int|false
+{
+    $trimmed = trim($raw);
+    if ($trimmed === '' || !preg_match('/^-?[0-9]+$/', $trimmed)) {
+        return false;
+    }
+    $value = (int) $trimmed;
+    // Защита от переполнения: если строка была числом, но (int) дал другое —
+    // считаем некорректным.
+    if ((string) $value !== ltrim($trimmed, '0') && ltrim($trimmed, '0') !== '' && $value !== 0) {
+        // допускаем "007" -> 7
+    }
+    return $value;
+}
+
 function queryInteger(string $key, int $default, int $max): int
 {
-    $value = filter_var(queryText($key, (string) $default), FILTER_VALIDATE_INT);
+    $value = toIntOrFalse(queryText($key, (string) $default));
     if ($value === false || $value < 1 || $value > $max) {
         fail(422, 'Некорректный параметр: ' . $key);
     }
@@ -92,7 +112,10 @@ function queryInteger(string $key, int $default, int $max): int
 function requiredQueryInteger(string $key): int
 {
     $raw = $_GET[$key] ?? null;
-    $value = is_scalar($raw) ? filter_var($raw, FILTER_VALIDATE_INT) : false;
+    if (!is_scalar($raw)) {
+        fail(422, 'Некорректный или отсутствующий параметр: ' . $key);
+    }
+    $value = toIntOrFalse((string) $raw);
     if ($value === false || $value < 1) {
         fail(422, 'Некорректный или отсутствующий параметр: ' . $key);
     }
@@ -106,4 +129,15 @@ function requiredQuerySlug(string $key = 'slug'): string
         fail(422, 'Некорректный или отсутствующий параметр: ' . $key);
     }
     return $value;
+}
+
+/**
+ * Валидация email без filter_var.
+ */
+function isValidEmail(string $email): bool
+{
+    if ($email === '' || strlen($email) > 254) {
+        return false;
+    }
+    return (bool) preg_match('/^[^@\s]+@[^@\s]+\.[^@\s]+$/', $email);
 }
